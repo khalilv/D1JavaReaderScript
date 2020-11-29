@@ -8,21 +8,20 @@ import java.net.*;
 import java.util.concurrent.TimeUnit;
 
 public class Script {
-    public static final String key = "ZrRQju1Wz2NgHj5EJj2oOXP6Z3oBf3dF";
+    private static final String key = "ZrRQju1Wz2NgHj5EJj2oOXP6Z3oBf3dF";
+    private static D1Logger masterLogger;
+
     public static void main(String [] args) {
         try{
+            masterLogger = D1Logger.getInstance();
             while(true){
-                System.out.println("Waiting for signal to start...");
+                masterLogger.log("Waiting to start...");
                 while(!StartListener("http://10.0.0.49/events")){
-                    System.out.println("Invalid signal received");
+                   masterLogger.log("Invalid signal recieved");
                 }
                 System.out.println("Start signal received");
             }
-
             //do work here
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -37,9 +36,7 @@ public class Script {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while (pingESP(url.getHost())) {
                 if (in.ready()) {
-                    System.out.println("2");
                     String line = in.readLine(); //blocks here if esp crashed or restart
-                    System.out.println("3");
                     if (line != null) {
                         if (line.contains(key)) {
                             connection.disconnect();
@@ -55,16 +52,16 @@ public class Script {
             }
             return false;
         } catch (ProtocolException e) {
-            e.printStackTrace();
+            masterLogger.err(e.getMessage());
             return false;
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            masterLogger.err(e.getMessage());
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            masterLogger.err(e.getMessage());
             return false;
         }catch(Exception e){
-            e.printStackTrace();
+            masterLogger.err(e.getMessage());
             return false;
         }
     }
@@ -72,10 +69,8 @@ public class Script {
     public static boolean pingESP(String url){
         try {
             return InetAddress.getByName(url).isReachable(800); //Replace with your name
-
         } catch (Exception e) {
-            System.out.println("FALSE");
-            e.printStackTrace();
+            masterLogger.err(e.getMessage());
             return false;
         }
     }
