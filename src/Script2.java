@@ -37,6 +37,7 @@ public class Script2 {
             while(true){
                 masterLogger.log("Waiting to start...");
                 while(!startListener(10)){ }
+                System.out.println("Starting to read...");
                 reader.startReading();
                 while(!stopListener(10)){}
                 reader.stopReading();
@@ -64,11 +65,11 @@ public class Script2 {
                 return false;
             }
         } catch (Exception e){
-            masterLogger.err(e.getMessage());
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
+                masterLogger.err(e.getMessage());
                 return false;
             }
         }
@@ -91,11 +92,11 @@ public class Script2 {
                 return false;
             }
         } catch (Exception e){
-            masterLogger.err(e.getMessage());
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
+                masterLogger.err(e.getMessage());
                 return false;
             }
         }
