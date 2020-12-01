@@ -1,3 +1,5 @@
+import com.thingmagic.*;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -8,9 +10,30 @@ import java.util.stream.Collectors;
 
 public class Script2 {
     private static D1Logger masterLogger;
+    private static D1ReadExceptionListener exceptionListener = new D1ReadExceptionListener();
+    private static D1ReadListener readListener = new D1ReadListener();
     public static void main(String[]args){
         try{
             masterLogger = D1Logger.getInstance();
+            Reader reader = Reader.create("tmr://192.168.0.100");
+            int [] antennas = {1,2};
+            reader.connect();
+            if (Reader.Region.UNSPEC == (Reader.Region)reader.paramGet("/reader/region/id"))
+            {
+                Reader.Region[] supportedRegions = (Reader.Region[])reader.paramGet(TMConstants.TMR_PARAM_REGION_SUPPORTEDREGIONS);
+                if (supportedRegions.length < 1)
+                {
+                    throw new Exception("Reader doesn't support any regions");
+                }
+                else
+                {
+                    reader.paramSet("/reader/region/id", supportedRegions[0]);
+                }
+            }
+            SimpleReadPlan plan = new SimpleReadPlan(antennas, TagProtocol.GEN2, null, null, 1000);
+            reader.paramSet(TMConstants.TMR_PARAM_READ_PLAN, plan);
+            reader.addReadListener(readListener);
+            reader.addReadExceptionListener(exceptionListener);
             while(true){
                 masterLogger.log("Waiting to start...");
                 while(!startListener(10)){ }
@@ -77,4 +100,24 @@ public class Script2 {
             masterLogger.err(e.getMessage());
         }
     }
+
+    private static class D1ReadExceptionListener implements ReadExceptionListener
+    {
+        private ArrayList<ReaderException> exceptions = new ArrayList<>();
+        public void tagReadException(com.thingmagic.Reader r, ReaderException re)
+        {
+            exceptions.add(re);
+        }
+    }
+
+    static class D1ReadListener implements ReadListener
+    {
+        private ArrayList<String> tags = new ArrayList<>();
+        public void tagRead(Reader r, TagReadData tr)
+        {
+           tags.add(tr.epcString());
+        }
+
+    }
+
 }
