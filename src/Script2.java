@@ -2,6 +2,7 @@ import com.thingmagic.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.BindException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,9 +69,10 @@ public class Script2 {
             try {
                 socket.close();
                 return false;
+            }catch (BindException bindex){
+                return false;
             } catch (Exception e2) {
                 masterLogger.err(e.getMessage());
-                System.out.println(e.getClass());
                 return false;
             }
         }
@@ -95,6 +97,8 @@ public class Script2 {
         } catch (Exception e){
             try {
                 socket.close();
+                return false;
+            }catch (BindException bindex){
                 return false;
             } catch (Exception e2) {
                 masterLogger.err(e.getMessage());
