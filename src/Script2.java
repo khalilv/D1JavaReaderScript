@@ -57,22 +57,21 @@ public class Script2 {
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
-            return (boolean) task.get(timeout,TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
+            return (boolean) task.get(timeout, TimeUnit.SECONDS);
+        }catch (TimeoutException t){
+            System.out.println("Got timeout");
+        } catch (BindException b) {
+            System.out.println("Got bind");
+        }catch (Exception e) {
+            System.out.println("Got unknown");
+            masterLogger.err(e.getMessage());
+        } finally {
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
-                return false;
-            }
-        } catch (Exception e){
-            try {
-                socket.close();
-                return false;
-            }catch (BindException bindex){
-                return false;
-            } catch (Exception e2) {
-                masterLogger.err(e.getMessage());
+                System.out.println("Unknown");
+                System.out.println(e2.getMessage());
                 return false;
             }
         }
