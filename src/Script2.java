@@ -1,11 +1,10 @@
 import com.thingmagic.*;
 
 import java.io.FileWriter;
-import java.io.IOException;
-import java.net.BindException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -113,10 +112,10 @@ public class Script2 {
         }
     }
 
-    public static void saveToCSV(ArrayList<String> epcs){
+    public static void saveToCSV(ArrayList<D1Tag> tags){
         try{
             FileWriter writer = new FileWriter("./results/" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + ".csv");
-            writer.write(epcs.stream().collect(Collectors.joining(",")));
+            writer.write(tags.stream().map(d1Tag -> d1Tag.toString()).collect(Collectors.joining("\n")));
             writer.close();
         }catch (Exception e){
             masterLogger.err(e.getMessage());
@@ -134,12 +133,18 @@ public class Script2 {
 
     static class D1ReadListener implements ReadListener
     {
-        public ArrayList<String> tags = new ArrayList<>();
+        public ArrayList<D1Tag> tags = new ArrayList<>();
         public void tagRead(Reader r, TagReadData tr)
         {
-            if(!tags.contains(tr.toString())) {
-                tags.add(tr.toString());
+            Optional<D1Tag> existingTag = contains(tags, tr.epcString());
+            if(!existingTag.isPresent()) {
+                tags.add(new D1Tag(tr.getRssi(),tr.epcString()));
+            }else if(existingTag.get().getRssi() < tr.getRssi()){
+                existingTag.get().setRssi(tr.getRssi());
             }
+        }
+        private static Optional<D1Tag> contains(ArrayList<D1Tag> tags, String epc){
+            return tags.stream().filter(o -> o.getEpc().equals(epc)).findFirst();
         }
 
     }
