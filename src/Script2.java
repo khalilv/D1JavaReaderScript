@@ -13,26 +13,26 @@ public class Script2 {
             masterLogger = D1Logger.getInstance();
             while(true){
                 masterLogger.log("Waiting to start...");
-                while(!startListener()){ }
+                while(!startListener(10)){ }
                 System.out.println("Start signal received");
                 ArrayList<String> epcs = new ArrayList<>();
                 epcs.add("87983579835792357");
                 epcs.add("980840352903675");
-                toCSV(epcs);
+                saveToCSV(epcs);
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    public static boolean startListener(){
+    public static boolean startListener(int timeout){
         FutureTask task;
         D1SocketServer socket = null;
         try {
-            socket = new D1SocketServer(8080, "/10.0.0.49");
+            socket = new D1SocketServer(8080, "/192.168.10.135");
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
-            return (boolean) task.get(10,TimeUnit.SECONDS);
+            return (boolean) task.get(timeout,TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             try {
                 socket.close();
@@ -46,7 +46,29 @@ public class Script2 {
         }
     }
 
-    public static void toCSV(ArrayList<String> epcs){
+    public static boolean stopListener(int timeout){
+        FutureTask task;
+        D1SocketServer socket = null;
+        try {
+            socket = new D1SocketServer(8080, "/192.168.10.135");
+            task = new FutureTask(socket);
+            Thread t = new Thread(task);
+            t.start();
+            return (boolean) task.get(timeout,TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            try {
+                socket.close();
+                return false;
+            } catch (IOException ioException) {
+                return false;
+            }
+        } catch (Exception e){
+            masterLogger.err(e.getMessage());
+            return false;
+        }
+    }
+
+    public static void saveToCSV(ArrayList<String> epcs){
         try{
             FileWriter writer = new FileWriter("./results/" + new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new Date()) + ".csv");
             writer.write(epcs.stream().collect(Collectors.joining(",")));
