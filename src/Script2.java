@@ -37,11 +37,11 @@ public class Script2 {
             while(true){
                 masterLogger.log("Waiting to start...");
                 while(!startListener(10)){ }
-                System.out.println("Start signal received");
-                ArrayList<String> epcs = new ArrayList<>();
-                epcs.add("87983579835792357");
-                epcs.add("980840352903675");
-                saveToCSV(epcs);
+                reader.startReading();
+                while(!stopListener(10)){}
+                reader.stopReading();
+                System.out.println(readListener.tags);
+                System.out.println(exceptionListener.exceptions);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class Script2 {
 
     private static class D1ReadExceptionListener implements ReadExceptionListener
     {
-        private ArrayList<ReaderException> exceptions = new ArrayList<>();
+        public ArrayList<ReaderException> exceptions = new ArrayList<>();
         public void tagReadException(com.thingmagic.Reader r, ReaderException re)
         {
             exceptions.add(re);
@@ -112,7 +112,7 @@ public class Script2 {
 
     static class D1ReadListener implements ReadListener
     {
-        private ArrayList<String> tags = new ArrayList<>();
+        public ArrayList<String> tags = new ArrayList<>();
         public void tagRead(Reader r, TagReadData tr)
         {
            tags.add(tr.epcString());
