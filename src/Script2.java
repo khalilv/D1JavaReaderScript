@@ -59,19 +59,15 @@ public class Script2 {
             t.start();
             return (boolean) task.get(timeout, TimeUnit.SECONDS);
         }catch (TimeoutException t){
-            System.out.println("Got timeout");
         } catch (BindException b) {
-            System.out.println("Got bind");
         }catch (Exception e) {
-            System.out.println("Got unknown");
             masterLogger.err(e.getMessage());
         } finally {
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
-                System.out.println("Unknown");
-                System.out.println(e2.getMessage());
+                masterLogger.err(e2.getMessage());
                 return false;
             }
         }
@@ -86,21 +82,16 @@ public class Script2 {
             Thread t = new Thread(task);
             t.start();
             return (boolean) task.get(timeout,TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
+        } catch (TimeoutException t){
+        } catch (BindException b) {
+        }catch (Exception e) {
+            masterLogger.err(e.getMessage());
+        } finally {
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
-                return false;
-            }
-        } catch (Exception e){
-            try {
-                socket.close();
-                return false;
-            }catch (BindException bindex){
-                return false;
-            } catch (Exception e2) {
-                masterLogger.err(e.getMessage());
+                masterLogger.err(e2.getMessage());
                 return false;
             }
         }
