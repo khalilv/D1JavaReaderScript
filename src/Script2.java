@@ -137,8 +137,8 @@ public class Script2 {
         public ArrayList<String> tags = new ArrayList<>();
         public void tagRead(Reader r, TagReadData tr)
         {
-            if(!tags.contains(tr.epcString())) {
-                tags.add(tr.epcString());
+            if(!tags.contains(tr.toString())) {
+                tags.add(tr.toString());
             }
         }
 
