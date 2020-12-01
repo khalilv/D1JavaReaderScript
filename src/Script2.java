@@ -70,6 +70,7 @@ public class Script2 {
                 return false;
             } catch (Exception e2) {
                 masterLogger.err(e.getMessage());
+                System.out.println(e.getClass());
                 return false;
             }
         }
