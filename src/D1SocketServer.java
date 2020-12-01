@@ -17,7 +17,7 @@ public class D1SocketServer implements Callable<Boolean> {
         while(true) {
             Socket client = this.server.accept();
             if(!client.getInetAddress().toString().equals(clientIP)){
-                server.close();
+                this.server.close();
                 return false;
             }
             BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));

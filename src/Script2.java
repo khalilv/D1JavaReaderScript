@@ -65,7 +65,12 @@ public class Script2 {
             }
         } catch (Exception e){
             masterLogger.err(e.getMessage());
-            return false;
+            try {
+                socket.close();
+                return false;
+            } catch (IOException ioException) {
+                return false;
+            }
         }
     }
 
