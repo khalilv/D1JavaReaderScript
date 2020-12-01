@@ -144,7 +144,15 @@ public class Script2 {
                 tags.add(new D1Tag(tr.getRssi(),tr.epcString()));
             }else if(existingTag.get().getRssi() < tr.getRssi()){
                 existingTag.get().setRssi(tr.getRssi());
+
+//                for(int i = 0; i < tags.size(); i++){
+//                    if(tags.get(i).getEpc().equals(tr.epcString())){
+//                        tags.get(i).setRssi(tr.getRssi());
+//                    }
+//                }
                 System.out.println("TAG RSSI UPDATED");
+                System.out.println(tr.getRssi());
+
             }
         }
         private static Optional<D1Tag> contains(ArrayList<D1Tag> tags, String epc){
