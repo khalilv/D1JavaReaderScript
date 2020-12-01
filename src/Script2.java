@@ -35,12 +35,15 @@ public class Script2 {
             reader.addReadListener(readListener);
             reader.addReadExceptionListener(exceptionListener);
             while(true){
+                readListener.tags.clear();
+                exceptionListener.exceptions.clear();
                 masterLogger.log("Waiting to start...");
                 while(!startListener(10)){ }
                 System.out.println("Starting to read...");
                 reader.startReading();
                 while(!stopListener(10)){}
                 reader.stopReading();
+                saveToCSV(readListener.tags);
                 System.out.println(readListener.tags);
                 System.out.println(exceptionListener.exceptions);
             }
