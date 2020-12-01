@@ -60,7 +60,7 @@ public class Script2 {
             try {
                 socket.close();
                 return false;
-            } catch (IOException ioException) {
+            } catch (Exception e2) {
                 return false;
             }
         } catch (Exception e){
@@ -68,7 +68,7 @@ public class Script2 {
             try {
                 socket.close();
                 return false;
-            } catch (IOException ioException) {
+            } catch (Exception e2) {
                 return false;
             }
         }
@@ -87,7 +87,7 @@ public class Script2 {
             try {
                 socket.close();
                 return false;
-            } catch (IOException ioException) {
+            } catch (Exception e2) {
                 return false;
             }
         } catch (Exception e){
@@ -95,7 +95,7 @@ public class Script2 {
             try {
                 socket.close();
                 return false;
-            } catch (IOException ioException) {
+            } catch (Exception e2) {
                 return false;
             }
         }
