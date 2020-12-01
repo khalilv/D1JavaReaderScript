@@ -15,7 +15,6 @@ public class D1SocketServer implements Callable<Boolean> {
     @Override
     public Boolean call() throws IOException {
         while(true) {
-            System.out.println(this.server.getInetAddress());
             Socket client = this.server.accept();
             if(!client.getInetAddress().toString().equals(clientIP)){
                 server.close();

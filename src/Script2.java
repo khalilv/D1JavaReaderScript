@@ -51,7 +51,7 @@ public class Script2 {
         FutureTask task;
         D1SocketServer socket = null;
         try {
-            socket = new D1SocketServer(8081, "/192.168.10.135");
+            socket = new D1SocketServer(8081, "/192.168.0.103");
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
@@ -73,7 +73,7 @@ public class Script2 {
         FutureTask task;
         D1SocketServer socket = null;
         try {
-            socket = new D1SocketServer(8080, "/192.168.10.135");
+            socket = new D1SocketServer(8081, "/192.168.0.103");
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
@@ -115,7 +115,9 @@ public class Script2 {
         public ArrayList<String> tags = new ArrayList<>();
         public void tagRead(Reader r, TagReadData tr)
         {
-           tags.add(tr.epcString());
+            if(!tags.contains(tr.epcString())) {
+                tags.add(tr.epcString());
+            }
         }
 
     }
