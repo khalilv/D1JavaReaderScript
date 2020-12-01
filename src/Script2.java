@@ -59,19 +59,19 @@ public class Script2 {
             t.start();
             return (boolean) task.get(timeout, TimeUnit.SECONDS);
         }catch (TimeoutException t){
-        } catch (BindException b) {
-        }catch (Exception e) {
-            if(e.getMessage() != null){
+            try {
+                socket.close();
+                return false;
+            } catch (Exception e) {
                 masterLogger.err(e.getMessage());
+                return false;
             }
-        } finally {
+        } catch (Exception e) {
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
-                if(e2.getMessage() != null){
-                    masterLogger.err(e2.getMessage());
-                }
+                masterLogger.err(e2.getMessage());
                 return false;
             }
         }
@@ -87,19 +87,19 @@ public class Script2 {
             t.start();
             return (boolean) task.get(timeout,TimeUnit.SECONDS);
         } catch (TimeoutException t){
-        } catch (BindException b) {
-        }catch (Exception e) {
-            if(e.getMessage() != null){
+            try {
+                socket.close();
+                return false;
+            } catch (Exception e) {
                 masterLogger.err(e.getMessage());
+                return false;
             }
-        } finally {
+        } catch (Exception e) {
             try {
                 socket.close();
                 return false;
             } catch (Exception e2) {
-                if(e2.getMessage() != null){
-                    masterLogger.err(e2.getMessage());
-                }
+                masterLogger.err(e2.getMessage());
                 return false;
             }
         }
