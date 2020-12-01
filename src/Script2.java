@@ -51,7 +51,7 @@ public class Script2 {
         FutureTask task;
         D1SocketServer socket = null;
         try {
-            socket = new D1SocketServer(8080, "/192.168.10.135");
+            socket = new D1SocketServer(8081, "/192.168.10.135");
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
