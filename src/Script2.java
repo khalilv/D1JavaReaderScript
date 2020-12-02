@@ -1,5 +1,6 @@
 import com.thingmagic.*;
 
+import javax.swing.plaf.synth.Region;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+
+
 public class Script2 {
     private static D1Logger masterLogger;
     private static D1ReadExceptionListener exceptionListener = new D1ReadExceptionListener();
@@ -15,25 +18,7 @@ public class Script2 {
     public static void main(String[]args){
         try{
             masterLogger = D1Logger.getInstance();
-            Reader reader = Reader.create("tmr://192.168.0.100");
-            int [] antennas = {1,2};
-            reader.connect();
-            if (Reader.Region.UNSPEC == (Reader.Region)reader.paramGet("/reader/region/id"))
-            {
-                Reader.Region[] supportedRegions = (Reader.Region[])reader.paramGet(TMConstants.TMR_PARAM_REGION_SUPPORTEDREGIONS);
-                if (supportedRegions.length < 1)
-                {
-                    throw new Exception("Reader doesn't support any regions");
-                }
-                else
-                {
-                    reader.paramSet("/reader/region/id", supportedRegions[0]);
-                }
-            }
-            SimpleReadPlan plan = new SimpleReadPlan(antennas, TagProtocol.GEN2, null, null, 1000);
-            reader.paramSet(TMConstants.TMR_PARAM_READ_PLAN, plan);
-            reader.addReadListener(readListener);
-            reader.addReadExceptionListener(exceptionListener);
+            Reader reader = setup("tmr://192.168.0.100");
             while(true){
                 readListener.tags.clear();
                 exceptionListener.exceptions.clear();
@@ -51,6 +36,30 @@ public class Script2 {
             e.printStackTrace();
         }
     }
+
+    public static Reader setup(String uri) throws Exception {
+        Reader reader = Reader.create(uri);
+        int [] antennas = {1,2};
+        reader.connect();
+        if (Reader.Region.UNSPEC == (Reader.Region)reader.paramGet("/reader/region/id"))
+        {
+            reader.paramSet("/reader/region/id", Reader.Region.NA);
+        }
+        reader.paramSet("/reader/radio/readPower", 3000);
+        reader.paramSet("/reader/gen2/session", Gen2.Session.S0);
+        reader.paramSet("/reader/gen2/Tari", Gen2.Tari.TARI_25US);
+        reader.paramSet("/reader/gen2/Tari", Gen2.Tari.TARI_25US);
+        reader.paramSet("/reader/gen2/BLF", 640);
+        reader.paramSet("/reader/gen2/tagEncoding", Gen2.TagEncoding.FM0);
+        reader.paramSet("/reader/gen2/tagEncoding", Gen2.TagEncoding.FM0);
+        reader.paramSet("/reader/gen2/q", new Gen2.StaticQ(7));
+        SimpleReadPlan plan = new SimpleReadPlan(antennas, TagProtocol.GEN2, null, null, 1000);
+        reader.paramSet(TMConstants.TMR_PARAM_READ_PLAN, plan);
+        reader.addReadListener(readListener);
+        reader.addReadExceptionListener(exceptionListener);
+        return reader;
+    }
+
     public static boolean startListener(int timeout){
         FutureTask task;
         D1SocketServer socket = null;
@@ -134,7 +143,7 @@ public class Script2 {
         }
     }
 
-    static class D1ReadListener implements ReadListener
+    private static class D1ReadListener implements ReadListener
     {
         public ArrayList<D1Tag> tags = new ArrayList<>();
         public void tagRead(Reader r, TagReadData tr)
@@ -144,15 +153,6 @@ public class Script2 {
                 tags.add(new D1Tag(tr.getRssi(),tr.epcString()));
             }else if(existingTag.get().getRssi() < tr.getRssi()){
                 existingTag.get().setRssi(tr.getRssi());
-
-//                for(int i = 0; i < tags.size(); i++){
-//                    if(tags.get(i).getEpc().equals(tr.epcString())){
-//                        tags.get(i).setRssi(tr.getRssi());
-//                    }
-//                }
-                System.out.println("TAG RSSI UPDATED");
-                System.out.println(tr.getRssi());
-
             }
         }
         private static Optional<D1Tag> contains(ArrayList<D1Tag> tags, String epc){
