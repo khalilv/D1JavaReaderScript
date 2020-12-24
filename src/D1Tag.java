@@ -1,3 +1,5 @@
+import java.util.Optional;
+
 public class D1Tag {
     private int rssi;
     private String epc;
@@ -23,7 +25,12 @@ public class D1Tag {
         this.epc = epc;
     }
 
-    public String toString(){
-        return this.epc + "," + this.rssi;
+    public String toString(Optional<D1Item> item)
+    {
+        if(item.isPresent()){
+            return item.get().getName() + "," + item.get().getBarcode() + "," + item.get().getPrice() + "," + this.rssi;
+        }else {
+            return this.epc + ",N/A,N/A," + this.rssi;
+        }
     }
 }

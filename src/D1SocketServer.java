@@ -16,16 +16,18 @@ public class D1SocketServer implements Callable<Boolean> {
     public Boolean call() throws IOException {
         while(true) {
             Socket client = this.server.accept();
-            if(!client.getInetAddress().toString().equals(clientIP)){
-                this.server.close();
-                return false;
-            }
+            //uncomment when using esp
+//            if(!client.getInetAddress().toString().equals(clientIP)){
+//                this.server.close();
+//                return false;
+//            }
             BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
             while(true){
                 if (in.ready()) {
-                    String line = in.readLine(); //blocks here if esp crashed or restart
+                    String line = in.readLine();
                     if (line != null) {
-                        if (line.contains(key)) {
+                        //change this line when using esp
+                        if (true) { //line.contains(key)
                             this.server.close();
                             in.close();
                             return true;
