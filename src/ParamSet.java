@@ -2,6 +2,7 @@ import com.thingmagic.*;
 
 public class ParamSet {
 
+    //Run this method to set read/write parameters on the reader
     public static void main(String[]args) {
         Reader reader = null;
         try{

@@ -25,6 +25,8 @@ public class D1Tag {
         this.epc = epc;
     }
 
+    //if an item is passed in we print more specific information about the tag that was read.
+    //Optional as some tags read do not correspond to items
     public String toString(Optional<D1Item> item)
     {
         if(item.isPresent()){

@@ -48,11 +48,12 @@ public class Script2 {
         }
     }
 
+
     public static boolean startListener(int timeout){
         FutureTask task;
         D1SocketServer socket = null;
         try {
-            socket = new D1SocketServer(8081, "/192.168.0.103"); //put ip address of esp here
+            socket = new D1SocketServer(8081); //port to listen on
             task = new FutureTask(socket);
             Thread t = new Thread(task);
             t.start();
