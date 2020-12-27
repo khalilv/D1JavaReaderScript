@@ -5,9 +5,9 @@ import java.util.*;
 import java.util.concurrent.Callable;
 
 public class D1SocketServer implements Callable<Boolean> {
-    private static final boolean test = false; //uncomment to accept start signals from anyone
+    private static final boolean test = false; //set to true to accept start signals from anyone
     private static final String key = "ZrRQju1Wz2NgHj5EJj2oOXP6Z3oBf3dF"; //esp auth key to send
-    private static final Set<String> trustedClients = new HashSet<>(Arrays.asList("/192.168.0.103", "/192.168.0.102")); //list of valid ip addresses to accept start signals from
+    private static final Set<String> trustedClients = new HashSet<>(Arrays.asList("/192.168.0.103", "/192.168.0.101")); //list of valid ip addresses to accept start signals from
     private ServerSocket server;
 
     public D1SocketServer(int port) throws IOException {
