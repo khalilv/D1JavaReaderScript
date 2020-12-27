@@ -16,7 +16,8 @@ public class Script2 {
         ArrayList<D1Tag> d1Tags = new ArrayList<>();
         try {
             items = D1File.parseItemsFromCSV("./items.csv"); //load items from csv
-            int readTime = args.length > 0 ? Integer.parseInt(args[0]) : 15000; //set read time (default is 15)
+            int readTime = args.length > 0 ? Integer.parseInt(args[0]) : 15000; //set read time (default is 15000)
+            System.out.println("SETTING READ TIME: " + readTime + "ms");
             while (true) {
                 System.out.println(getDate() + " Waiting for start signal.");
                 while(!startListener(10)){ } //wait for start signal
